@@ -17,6 +17,11 @@ int MainActual(LPCSTR lpCmdLine)
 	return returnCode;
 }
 
+#include <pspkernel.h>
+
+PSP_MODULE_INFO("SpaceCadetPinball", 0, 1, 1);
+PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER|THREAD_ATTR_VFPU);
+
 int main(int argc, char* argv[])
 {
 	std::string cmdLine;
