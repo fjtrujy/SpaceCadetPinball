@@ -124,7 +124,8 @@ void pb::SelectDatFile(const std::vector<const char*>& dataSearchPaths)
 	std::string datFileNames[3]
 	{
 		"CADET.DAT",
-		options::get_string("Pinball Data", pinball::get_rc_string(168, 0)),
+		"PINBALL.DAT",
+		// options::get_string("Pinball Data", pinball::get_rc_string(168, 0)),
 		"DEMO.DAT",
 	};
 
