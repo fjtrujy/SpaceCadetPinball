@@ -215,17 +215,24 @@ if(${CMAKE_VERSION} VERSION_GREATER "3.16.0" OR ${CMAKE_VERSION} VERSION_EQUAL "
             )
 endif()
 
-target_link_libraries(SpaceCadetPinball SDL2main ${SDL2_MIXER_LIBRARY} ${SDL2_LIBRARY} stdc++ GL pspvram pspvfpu pspgu pspge pspctrl pspdisplay pspaudio psphprm psprtc vorbisfile vorbis ogg)
+if(PSP)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+    target_link_libraries(SpaceCadetPinball SDL2main ${SDL2_MIXER_LIBRARY} SDL2d stdc++ GL pspvram pspvfpu pspgu pspge pspctrl pspdisplay pspaudio psphprm psprtc vorbisfile vorbis ogg)
 
-# Create EBOOT.PBP for PSP version
-create_pbp_file(
-    TARGET SpaceCadetPinball
-    ICON_PATH NULL
-    BACKGROUND_PATH NULL
-    PREVIEW_PATH NULL
-    TITLE SpaceCadetPinball
-    BUILD_PRX
-)
+    # Create EBOOT.PBP for PSP version
+    create_pbp_file(
+        TARGET SpaceCadetPinball
+        ICON_PATH NULL
+        BACKGROUND_PATH NULL
+        PREVIEW_PATH NULL
+        TITLE SpaceCadetPinball
+        BUILD_PRX
+    )
+
+else()
+    target_link_libraries(SpaceCadetPinball ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
+endif()
+
 
 # On Windows, copy DLL to output
 if(WIN32)
