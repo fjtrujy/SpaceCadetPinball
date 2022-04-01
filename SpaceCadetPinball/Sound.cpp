@@ -10,7 +10,7 @@ bool Sound::Init(int channels, bool enableFlag, int volume)
 {
 	Volume = volume;
 	Mix_Init(MIX_INIT_MID_Proxy);
-	auto result = Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024);
+	auto result = Mix_OpenAudio(11025, MIX_DEFAULT_FORMAT, 1, 1024);
 	SetChannels(channels);
 	Enable(enableFlag);
 	return !result;
