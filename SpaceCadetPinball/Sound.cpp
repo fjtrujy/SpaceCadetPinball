@@ -13,7 +13,7 @@ void Sound::Init(bool mixOpen, int channels, bool enableFlag, int volume)
 {
 	MixOpen = mixOpen;
 	Volume = volume;
-	auto result = Mix_OpenAudio(11025, MIX_DEFAULT_FORMAT, 1, 1024);
+	auto result = Mix_OpenAudio(11025, MIX_DEFAULT_FORMAT, 2, 512);
 	SetChannels(channels);
 	Enable(enableFlag);
 }
