@@ -134,7 +134,7 @@ void gdrv_bitmap8::CreateTexture(const char* scaleHint, int access)
 	Texture = SDL_CreateTexture
 	(
 		winmain::Renderer,
-		SDL_PIXELFORMAT_BGRA32,
+		SDL_PIXELFORMAT_RGBA32,
 		access,
 		Width, Height
 	);
@@ -154,9 +154,24 @@ void gdrv_bitmap8::BlitToTexture()
 		&pitch
 	);
 	assertm(result == 0, "Updating non-streaming texture");
-	assertm(static_cast<unsigned>(pitch) == Width * sizeof(ColorRgba), "Padding on vScreen texture");
+	// assertm(static_cast<unsigned>(pitch) == Width * sizeof(ColorRgba), "Padding on vScreen texture");
 
-	std::memcpy(lockedPixels, BmpBufPtr1, Width * Height * sizeof(ColorRgba));
+	if (static_cast<unsigned>(pitch) == Width * sizeof(ColorRgba)) {
+		std::memcpy(lockedPixels, BmpBufPtr1, Width * Height * sizeof(ColorRgba));
+	} else {
+		auto srcPtr = &BmpBufPtr1[0];
+		auto dstPtr = &lockedPixels[0];
+		int srcStride = Width;
+		uint dstStride = pitch / sizeof(ColorRgba);
+
+		for (int y = Height; y > 0; --y)
+		{
+			std::memcpy(dstPtr, srcPtr, Width * sizeof(ColorRgba));
+			srcPtr += srcStride;
+			dstPtr += dstStride;
+		}
+	}
+	
 
 	SDL_UnlockTexture(Texture);
 }
@@ -167,15 +182,15 @@ int gdrv::display_palette(ColorRgba* plt)
 	const ColorRgba sysPaletteColors[10]
 	{
 		ColorRgba{0, 0, 0, 0}, // Color 0: transparent
-		ColorRgba{0x80, 0, 0, 0xff},
-		ColorRgba{0, 0x80, 0, 0xff},
-		ColorRgba{0x80, 0x80, 0, 0xff},
-		ColorRgba{0, 0, 0x80, 0xff},
-		ColorRgba{0x80, 0, 0x80, 0xff},
-		ColorRgba{0, 0x80, 0x80, 0xff},
-		ColorRgba{0xC0, 0xC0, 0xC0, 0xff},
-		ColorRgba{0xC0, 0xDC, 0xC0, 0xff},
-		ColorRgba{0xA6, 0xCA, 0xF0, 0xff},
+		ColorRgba{0xff, 0, 0, 0x80},
+		ColorRgba{0xff, 0, 0x80, 0},
+		ColorRgba{0xff, 0, 0x80, 0x80},
+		ColorRgba{0xff, 0x80, 0, 0},
+		ColorRgba{0xff, 0x80, 0, 0x80},
+		ColorRgba{0xff, 0x80, 0x80, 0},
+		ColorRgba{0xff, 0xC0, 0xC0, 0xC0},
+		ColorRgba{0xff, 0xC0, 0xDC, 0xC0},
+		ColorRgba{0xff, 0xF0, 0xCA, 0xA6},
 	};
 
 	std::memset(current_palette, 0, sizeof current_palette);
@@ -183,10 +198,15 @@ int gdrv::display_palette(ColorRgba* plt)
 
 	for (int index = 10; plt && index < 246; index++)
 	{
-		auto srcClr = plt[index];
-		srcClr.SetAlpha(0xff);		
-		current_palette[index] = ColorRgba{ srcClr };
-		current_palette[index].SetAlpha(2);
+		
+		int32_t tmp = plt[index].Color;	
+		int8_t red = (tmp >> 16) & 0xffu;
+		int8_t green = (tmp >> 8) & 0xffu;
+		int8_t blue = (tmp >> 0) & 0xffu;
+		int8_t alpha = 0xffu;
+		auto srcClr = ColorRgba(red, green, blue, alpha);
+		
+		current_palette[index] = srcClr;
 	}
 
 	current_palette[255] = ColorRgba::White();

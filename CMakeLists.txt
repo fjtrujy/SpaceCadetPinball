@@ -217,7 +217,7 @@ endif()
 
 if(PSP)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-    target_link_libraries(SpaceCadetPinball SDL2main ${SDL2_MIXER_LIBRARY} SDL2d stdc++ GL pspvram pspvfpu pspgu pspge pspctrl pspdisplay pspaudio psphprm psprtc vorbisfile vorbis ogg)
+    target_link_libraries(SpaceCadetPinball SDL2main ${SDL2_MIXER_LIBRARY} SDL2 stdc++ GL pspvram pspvfpu pspgu pspge pspctrl pspdisplay pspaudio psphprm psprtc vorbisfile vorbis ogg)
 
     # Create EBOOT.PBP for PSP version
     create_pbp_file(
