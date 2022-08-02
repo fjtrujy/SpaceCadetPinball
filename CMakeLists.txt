@@ -19,6 +19,10 @@ if(MINGW)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
 endif()
 
+if(PS2)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DPS2 -D__PS2__")
+endif()
+
 if(APPLE)
     set(MACOSX_RPATH)
     set(CMAKE_BUILD_WITH_INSTALL_RPATH true)
@@ -215,7 +219,11 @@ if(${CMAKE_VERSION} VERSION_GREATER "3.16.0" OR ${CMAKE_VERSION} VERSION_EQUAL "
             )
 endif()
 
+if(_EE)
 target_link_libraries(SpaceCadetPinball ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
+else()
+target_link_libraries(SpaceCadetPinball SDL2main ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} patches gskit dmakit ps2_drivers)
+endif()
 
 # On Windows, copy DLL to output
 if(WIN32)

@@ -33,7 +33,9 @@
 #include <initializer_list>
 //#include <array>
 
+#ifndef _EE
 #define SDL_MAIN_HANDLED
+#endif
 #include "SDL.h"
 #include <SDL_mixer.h>
 

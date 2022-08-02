@@ -1376,27 +1376,27 @@ void winmain::RenderFrameTimeDialog()
 
 void winmain::HybridSleep(DurationMs sleepTarget)
 {
-	static constexpr double StdDevFactor = 0.5;
+	// static constexpr double StdDevFactor = 0.5;
 
-	// This nice concept is from https://blat-blatnik.github.io/computerBear/making-accurate-sleep-function/
-	// Sacrifices some CPU time for smaller frame time jitter
-	while (sleepTarget > SpinThreshold)
-	{
-		auto start = Clock::now();
-		std::this_thread::sleep_for(DurationMs(1));
-		auto end = Clock::now();
+	// // This nice concept is from https://blat-blatnik.github.io/computerBear/making-accurate-sleep-function/
+	// // Sacrifices some CPU time for smaller frame time jitter
+	// while (sleepTarget > SpinThreshold)
+	// {
+	// 	auto start = Clock::now();
+	// 	std::this_thread::sleep_for(DurationMs(1));
+	// 	auto end = Clock::now();
 
-		auto actualDuration = DurationMs(end - start);
-		sleepTarget -= actualDuration;
+	// 	auto actualDuration = DurationMs(end - start);
+	// 	sleepTarget -= actualDuration;
 
-		// Update expected sleep duration using Welford's online algorithm
-		// With bad timer, this will run away to 100% spin
-		SleepState.Advance(actualDuration.count());
-		SpinThreshold = DurationMs(SleepState.mean + SleepState.GetStdDev() * StdDevFactor);
-	}
+	// 	// Update expected sleep duration using Welford's online algorithm
+	// 	// With bad timer, this will run away to 100% spin
+	// 	SleepState.Advance(actualDuration.count());
+	// 	SpinThreshold = DurationMs(SleepState.mean + SleepState.GetStdDev() * StdDevFactor);
+	// }
 
-	// spin lock
-	for (auto start = Clock::now(); DurationMs(Clock::now() - start) < sleepTarget;);
+	// // spin lock
+	// for (auto start = Clock::now(); DurationMs(Clock::now() - start) < sleepTarget;);
 }
 
 void winmain::ImGuiMenuItemWShortcut(GameBindings binding, bool selected)
