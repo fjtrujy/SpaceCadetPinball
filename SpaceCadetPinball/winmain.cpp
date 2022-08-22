@@ -17,6 +17,16 @@ SDL_Window* winmain::MainWindow = nullptr;
 SDL_Renderer* winmain::Renderer = nullptr;
 ImGuiIO* winmain::ImIO = nullptr;
 
+#if defined(__PS2__)
+#define WINDOW_FLAGS (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_HIDDEN | SDL_WINDOW_RESIZABLE)
+#define WINDOW_WIDTH 320
+#define WINDOW_HEIGHT 240
+#else
+#define WINDOW_FLAGS (SDL_WINDOW_HIDDEN | SDL_WINDOW_RESIZABLE)
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 556
+#endif
+
 int winmain::return_value = 0;
 bool winmain::bQuit = false;
 bool winmain::activated = false;
@@ -77,8 +87,8 @@ int winmain::WinMain(LPCSTR lpCmdLine)
 	(
 		pb::get_rc_string(Msg::STRING139),
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		800, 556,
-		SDL_WINDOW_HIDDEN | SDL_WINDOW_RESIZABLE
+		WINDOW_WIDTH, WINDOW_HEIGHT,
+		WINDOW_FLAGS
 	);
 	MainWindow = window;
 	if (!window)
