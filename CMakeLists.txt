@@ -220,7 +220,7 @@ if(${CMAKE_VERSION} VERSION_GREATER "3.16.0" OR ${CMAKE_VERSION} VERSION_EQUAL "
 endif()
 
 if(PS2)
-target_link_libraries(SpaceCadetPinball SDL2main ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} patches gskit dmakit ps2_drivers)
+target_link_libraries(SpaceCadetPinball SDL2main ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} patches gskit dmakit ps2_drivers modplug)
 else()
 target_link_libraries(SpaceCadetPinball ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
 endif()
